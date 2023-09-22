@@ -9,7 +9,7 @@ export interface FormProps {
 }
 
 export const Form = ({ type, dir, onCreate }: FormProps) => {
-    // const [currentDir, setCurrentDir] = useState(dir);
+    const [currentDir, setCurrentDir] = useState<'in' | 'out'>(dir);
     const [currentValue, setCurrentValue] = useState(undefined);
     const [currentName, setCurrentName] = useState('');
 
@@ -19,15 +19,15 @@ export const Form = ({ type, dir, onCreate }: FormProps) => {
         onCreate({
             name: currentName,
             title: currentName,
-            value: currentValue,
+            value: (currentDir === 'in') ? currentValue : (-1) * currentValue,
             date: new Date(),
             type,
         });
 
-        // e.target.reset();
+        setCurrentName('');
+        setCurrentValue('');
     };
 
-    // @todo dir-toggle
     return (
         <form onSubmit={handleSubmit}>
             <div className="category-form">
@@ -40,6 +40,15 @@ export const Form = ({ type, dir, onCreate }: FormProps) => {
                     value={currentValue}
                     onChange={(e) => setCurrentValue(parseFloat(e.target.value))}
                 />
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                <label className={`toggle value-${currentDir}`}>
+                    <input
+                        type="checkbox"
+                        checked={currentDir === 'in'}
+                        onChange={(e) => setCurrentDir(e.target.checked ? 'in' : 'out')}
+                    />
+                    <span>{ currentDir === 'in' ? '↑' : '↓' }</span>
+                </label>
                 <input
                     name="name"
                     type="text"

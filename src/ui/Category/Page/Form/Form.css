@@ -5,3 +5,39 @@ div.category-form {
     flex-wrap: wrap;
     align-items: center;
 }
+
+div.category-form .toggle {
+    display: flex;
+    align-items: center;
+    outline: none;
+}
+
+div.category-form .toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+div.category-form .toggle span {
+    display: flex;
+    align-items: center;
+    user-select: none;
+    height: var(--input-height);
+    background: var(--background-modifier-form-field);
+    border: var(--input-border-width) solid var(--background-modifier-border);
+    padding: var(--size-4-1) var(--size-4-2);
+    font-size: var(--font-ui-small);
+    border-radius: var(--input-radius);
+}
+
+div.category-form .toggle:hover span {
+    border-color: var(--background-modifier-border-hover);
+    transition: box-shadow 0.15s ease-in-out, border 0.15s ease-in-out;
+}
+
+div.category-form .toggle input:focus-visible + span {
+    box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+}
