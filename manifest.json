@@ -1,0 +1,10 @@
+{
+	"id": "skybitsky-budget",
+	"name": "Skybitsky's Budget",
+	"version": "0.1",
+	"minAppVersion": "0.12.0",
+	"description": "A plugin for managing and planning personal budget.",
+	"author": "Skybitsky",
+	"authorUrl": "https://github.com/dskybitsky",
+	"isDesktopOnly": false
+}
