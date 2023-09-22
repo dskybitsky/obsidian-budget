@@ -45,7 +45,7 @@ export default class BudgetPlugin extends Plugin {
 
     budget: BudgetInterface;
 
-    readonly rootsIndex: Map<string, Root> = new Map();
+    readonly rootsIndex: Map<string, Root[]> = new Map();
 
     readonly elementsFactoriesIndex: Map<Root, () => ReactNode> = new Map();
 
@@ -74,8 +74,10 @@ export default class BudgetPlugin extends Plugin {
     }
 
     onunload() {
-        for (const [, root] of this.rootsIndex) {
-            root.unmount();
+        for (const [, roots] of this.rootsIndex) {
+            for (const root of roots) {
+                root.unmount();
+            }
         }
     }
 
@@ -136,7 +138,7 @@ export default class BudgetPlugin extends Plugin {
     ): void {
         const root = createRoot(container);
 
-        this.rootsIndex.set(context.sourcePath, root);
+        this.addRoot(root, context.sourcePath);
 
         const elementFactory = () => createElement(Loading, {
             loading: !this.dataviewApi.index.initialized,
@@ -156,7 +158,7 @@ export default class BudgetPlugin extends Plugin {
     ): void {
         const root = createRoot(container);
 
-        this.rootsIndex.set(context.sourcePath, root);
+        this.addRoot(root, context.sourcePath);
 
         const elementFactory = () => createElement(Loading, {
             loading: !this.dataviewApi.index.initialized,
@@ -176,7 +178,7 @@ export default class BudgetPlugin extends Plugin {
     ): void {
         const root = createRoot(container);
 
-        this.rootsIndex.set(context.sourcePath, root);
+        this.addRoot(root, context.sourcePath);
 
         const elementFactory = () => createElement(Loading, {
             loading: !this.dataviewApi.index.initialized,
@@ -196,7 +198,7 @@ export default class BudgetPlugin extends Plugin {
     ): void {
         const root = createRoot(container);
 
-        this.rootsIndex.set(context.sourcePath, root);
+        this.addRoot(root, context.sourcePath);
 
         const elementFactory = () => createElement(Loading, {
             loading: !this.dataviewApi.index.initialized,
@@ -221,19 +223,35 @@ export default class BudgetPlugin extends Plugin {
             return;
         }
 
-        const root = this.rootsIndex.get(page.path);
+        const roots = this.rootsIndex.get(BudgetPlugin.getFolder(page.path));
 
-        if (!root) {
+        if (!roots) {
             return;
         }
 
-        const elementFactory = this.elementsFactoriesIndex.get(root);
+        for (const root of roots) {
+            const elementFactory = this.elementsFactoriesIndex.get(root);
 
-        if (!elementFactory) {
-            return;
+            if (!elementFactory) {
+                return;
+            }
+
+            root.render(elementFactory());
+        }
+    }
+
+    protected addRoot(root: Root, path: string) {
+        const folder = BudgetPlugin.getFolder(path);
+
+        if (!this.rootsIndex.has(folder)) {
+            this.rootsIndex.set(folder, []);
         }
 
-        root.render(elementFactory());
+        this.rootsIndex.get(folder).push(root);
+    }
+
+    protected static getFolder(path: string): string {
+        return path.split('/').slice(0, -1).join('/');
     }
 }
 

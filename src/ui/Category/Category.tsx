@@ -25,7 +25,7 @@ export const Category = ({ budget, path }: CategoryProps) => {
 
         (async () => {
             try {
-                await budget.createTransactionPage(path, newTransaction);
+                await budget.createTransactionPage(category.folder, newTransaction);
             } catch (e) {
                 // eslint-disable-next-line no-console
                 console.error(e);

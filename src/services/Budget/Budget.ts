@@ -97,14 +97,14 @@ export class Budget implements BudgetInterface {
         let plan = 0;
         let fact = 0;
 
-        const categories = this.getCategories(page.file.folder);
+        const categories = this.getCategories(page.file.path);
 
         for (const category of categories) {
             plan += category.total.plan;
             fact += category.total.fact;
         }
 
-        const transactions = this.getTransactions(page.file.folder);
+        const transactions = this.getTransactions(page.file.path);
 
         for (const transaction of transactions) {
             if (transaction.type === 'plan') {
@@ -124,6 +124,7 @@ export class Budget implements BudgetInterface {
             total: { plan, fact },
             dir: page.dir === 'in' ? 'in' : 'out',
             path: page.file.path,
+            folder: page.file.folder,
         };
     }
 

@@ -20,6 +20,7 @@ export type CategoryDto = {
     total: { plan: number; fact: number };
     dir: 'in' | 'out';
     path: string;
+    folder: string,
 };
 
 export type TransactionDto = {
