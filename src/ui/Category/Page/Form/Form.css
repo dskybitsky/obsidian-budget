@@ -1,0 +1,7 @@
+div.category-form {
+    display: flex;
+    margin-block-end: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}

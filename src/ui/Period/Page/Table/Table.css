@@ -1,0 +1,31 @@
+div.period-table {
+    grid-template-columns: 2fr 1fr;
+}
+
+div.period-table > span:nth-child(4n + 2),
+div.period-table > span:nth-child(4n + 3) {
+    display: none;
+}
+
+div.period-table > span:nth-child(-n + 4) {
+    background-color: var(--table-header-bg-color);
+}
+
+div.period-table > span:nth-child(8n + 1),
+div.period-table > span:nth-child(8n + 2),
+div.period-table > span:nth-child(8n + 3),
+div.period-table > span:nth-child(8n + 4) {
+    background-color: var(--table-even-row-bg-color);
+}
+
+@media (min-width: 840px) {
+    div.period-table {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+
+    div.period-table > span:nth-child(4n + 2),
+    div.period-table > span:nth-child(4n + 3) {
+        display: flex;
+    }
+}

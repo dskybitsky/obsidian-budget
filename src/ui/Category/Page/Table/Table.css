@@ -1,0 +1,13 @@
+div.category-table {
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+div.category-table > span:nth-child(6n + 1),
+div.category-table > span:nth-child(6n + 2),
+div.category-table > span:nth-child(6n + 3) {
+    background-color: var(--table-even-row-bg-color);
+}
+
+div.category-table > span:nth-child(-n + 3) {
+    background-color: var(--table-header-bg-color);
+}

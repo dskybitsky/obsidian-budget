@@ -1,0 +1,7 @@
+span.value-in {
+    color: var(--color-green);
+}
+
+span.value-out {
+    color: var(--color-red);
+}

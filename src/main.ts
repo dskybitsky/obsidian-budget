@@ -3,7 +3,7 @@ import type { MarkdownPostProcessorContext, PluginManifest } from 'obsidian';
 import { DataviewApi, getAPI as getDataviewApi } from 'obsidian-dataview';
 import { createRoot, Root } from 'react-dom/client';
 import { createElement, ReactNode } from 'react';
-import { Loading, Reader } from 'skybitsky-common';
+import { Loading, Reader, Writer } from 'skybitsky-common';
 import {
     Account,
     Period,
@@ -12,10 +12,12 @@ import {
 } from './ui';
 import { Budget, BudgetInterface } from './services';
 
-const SBS_BUDGET_ACCOUNT = CSS.escape('sbs:budget:account');
-const SBS_BUDGET_PERIOD = CSS.escape('sbs:budget:period');
-const SBS_BUDGET_CATEGORY = CSS.escape('sbs:budget:category');
-const SBS_BUDGET_TRANSACTION = CSS.escape('sbs:budget:transaction');
+import {
+    SBS_BUDGET_ACCOUNT,
+    SBS_BUDGET_CATEGORY,
+    SBS_BUDGET_PERIOD,
+    SBS_BUDGET_TRANSACTION,
+} from './constants';
 
 declare module 'obsidian' {
     interface MetadataCache {
@@ -39,6 +41,8 @@ export default class BudgetPlugin extends Plugin {
 
     reader: Reader;
 
+    writer: Writer;
+
     budget: BudgetInterface;
 
     readonly rootsIndex: Map<string, Root> = new Map();
@@ -55,8 +59,11 @@ export default class BudgetPlugin extends Plugin {
         }
 
         this.dataviewApi = dataviewApi;
+
         this.reader = new Reader(this.dataviewApi);
-        this.budget = new Budget(this.reader);
+        this.writer = new Writer(app.vault);
+
+        this.budget = new Budget(this.reader, this.writer);
     }
 
     async onload() {
