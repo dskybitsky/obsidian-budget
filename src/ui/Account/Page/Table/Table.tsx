@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { InternalLink } from 'skybitsky-common';
 import { PeriodDto, TransactionDto } from '../../../../services';
 import { Value } from '../../../Value';
@@ -32,31 +32,32 @@ export const Table = ({ value, periods, transactions }: TableProps) => {
 
             {periods.map((period, index) => {
                 const valueEnd = getValueEnd(transactions[index]);
-
-                const gap = Math.abs(period.value - prevEndValue) > 0.01
-                    ? [
-                        <span>-</span>,
-                        <span><Value value={prevEndValue} /></span>,
-                        <span><Value value={period.value} /></span>,
-                    ]
-                    : [];
+                const hasGap = Math.abs(period.value - prevEndValue) > 0.01;
 
                 prevEndValue = valueEnd;
 
-                return [
-                    ...gap,
-                    <span>
-                        <InternalLink path={period.path}>
-                            {period.title}
-                        </InternalLink>
-                    </span>,
-                    <span>
-                        <Value value={period.value} />
-                    </span>,
-                    <span>
-                        <Value value={valueEnd} />
-                    </span>,
-                ];
+                return (
+                    <Fragment key={period.name}>
+                        { hasGap && (
+                            <>
+                                <span>-</span>
+                                <span><Value value={prevEndValue} /></span>
+                                <span><Value value={period.value} /></span>
+                            </>
+                        )}
+                        <span>
+                            <InternalLink path={period.path}>
+                                {period.title}
+                            </InternalLink>
+                        </span>
+                        <span>
+                            <Value value={period.value} />
+                        </span>
+                        <span>
+                            <Value value={valueEnd} />
+                        </span>
+                    </Fragment>
+                );
             })}
         </div>
     );

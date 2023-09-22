@@ -10,16 +10,18 @@ export interface FormProps {
 
 export const Form = ({ type, dir, onCreate }: FormProps) => {
     const [currentDir, setCurrentDir] = useState<'in' | 'out'>(dir);
-    const [currentValue, setCurrentValue] = useState(undefined);
+    const [currentValue, setCurrentValue] = useState('');
     const [currentName, setCurrentName] = useState('');
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        const value = parseFloat(currentValue);
+
         onCreate({
             name: currentName,
             title: currentName,
-            value: (currentDir === 'in') ? currentValue : (-1) * currentValue,
+            value: (currentDir === 'in') ? value : (-1) * value,
             date: new Date(),
             type,
         });
@@ -38,7 +40,7 @@ export const Form = ({ type, dir, onCreate }: FormProps) => {
                     placeholder="€"
                     inputMode="decimal"
                     value={currentValue}
-                    onChange={(e) => setCurrentValue(parseFloat(e.target.value))}
+                    onChange={(e) => setCurrentValue(e.target.value)}
                 />
                 {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                 <label className={`toggle value-${currentDir}`}>

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { Fragment, ReactNode } from 'react';
 import { InternalLink } from 'skybitsky-common';
 import { CategoryDto } from '../../../../services';
 import { Value } from '../../../Value';
@@ -30,12 +30,14 @@ export const Table = ({
         // @todo icon
         return showCurrentRow
             ? [
-                <span style={firstSpanStyle}>
-                    <InternalLink path={category.path}>{category.title}</InternalLink>
-                </span>,
-                <span><Value value={category.total.plan} /></span>,
-                <span><Value value={category.total.fact} /></span>,
-                <span><Value value={categoryRest} /></span>,
+                <Fragment key={category.name}>
+                    <span style={firstSpanStyle}>
+                        <InternalLink path={category.path}>{category.title}</InternalLink>
+                    </span>
+                    <span><Value value={category.total.plan} /></span>
+                    <span><Value value={category.total.fact} /></span>
+                    <span><Value value={categoryRest} /></span>
+                </Fragment>,
                 ...nextRows,
             ] : nextRows;
     };
