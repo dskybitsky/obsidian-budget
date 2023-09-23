@@ -8,6 +8,14 @@
     --table-even-row-bg-color: var(--color-base-30);
 }
 
+.sbs-budget .dir-in {
+    color: var(--color-green);
+}
+
+.sbs-budget .dir-out {
+    color: var(--color-red);
+}
+
 .sbs-budget .table {
     display: grid;
     grid-column-gap: 0.1rem;

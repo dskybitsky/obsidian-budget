@@ -1,5 +1,4 @@
 import React from 'react';
-import './Value.css';
 
 export interface ValueProps {
     value: number,
@@ -21,7 +20,7 @@ export const Value = ({ value }: ValueProps) => {
     }
 
     return (
-        <span className={`value-${dir}`}>
+        <span className={`dir-${dir}`}>
             { `${ico}€${normalizedValue.toFixed(2)}` }
         </span>
     );

@@ -2,7 +2,12 @@ import { App, Plugin } from 'obsidian';
 import type { MarkdownPostProcessorContext, PluginManifest } from 'obsidian';
 import { DataviewApi, getAPI as getDataviewApi } from 'obsidian-dataview';
 import { createRoot, Root } from 'react-dom/client';
-import { createElement, ReactElement, ReactNode } from 'react';
+import {
+    cloneElement,
+    createElement,
+    ReactElement,
+    ReactNode,
+} from 'react';
 import { Container, Reader, Writer } from 'skybitsky-common';
 import {
     Account,
@@ -173,7 +178,7 @@ export default class BudgetPlugin extends Plugin {
         const elementFactory = () => createElement(Container, {
             loading: !this.dataviewApi.index.initialized,
             className: 'sbs-budget',
-        }, child);
+        }, cloneElement(child));
 
         this.elementsFactoriesIndex.set(root, elementFactory);
 

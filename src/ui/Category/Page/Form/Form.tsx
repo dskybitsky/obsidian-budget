@@ -49,7 +49,9 @@ export const Form = ({ type, dir, onCreate }: FormProps) => {
                         checked={currentDir === 'in'}
                         onChange={(e) => setCurrentDir(e.target.checked ? 'in' : 'out')}
                     />
-                    <span>{ currentDir === 'in' ? '↑' : '↓' }</span>
+                    <span className={`dir-${currentDir}`}>
+                        { currentDir === 'in' ? '↑' : '↓' }
+                    </span>
                 </label>
                 <input
                     name="name"
