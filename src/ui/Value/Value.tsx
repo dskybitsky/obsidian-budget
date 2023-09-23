@@ -10,7 +10,7 @@ export const Value = ({ value }: ValueProps) => {
     const normalizedValue = Math.abs(roundValue);
 
     let dir = 'zero';
-    let ico: string | boolean = false;
+    let ico = '';
 
     if (roundValue > 0) {
         dir = 'in';
@@ -22,8 +22,7 @@ export const Value = ({ value }: ValueProps) => {
 
     return (
         <span className={`value-${dir}`}>
-            { ico && <span>{ ico }</span> }
-            { `€${normalizedValue.toFixed(2)}` }
+            { `${ico}€${normalizedValue.toFixed(2)}` }
         </span>
     );
 };

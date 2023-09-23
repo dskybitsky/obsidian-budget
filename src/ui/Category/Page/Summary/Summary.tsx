@@ -1,5 +1,6 @@
 import React from 'react';
 import { Value } from '../../../Value';
+import { Summary as SummaryElement } from '../../../Summary';
 
 export interface SummaryProps {
     factTotal: number;
@@ -7,18 +8,18 @@ export interface SummaryProps {
 }
 
 export const Summary = ({ factTotal, planTotal }: SummaryProps) => (
-    <div className="summary">
+    <SummaryElement>
         <span>
-            План:
+            <span>План:</span>
             <Value value={planTotal} />
         </span>
         <span>
-            Факт:
+            <span>Факт:</span>
             <Value value={factTotal} />
         </span>
         <span>
-            Остаток:
+            <span>Остаток:</span>
             <Value value={factTotal - planTotal} />
         </span>
-    </div>
+    </SummaryElement>
 );

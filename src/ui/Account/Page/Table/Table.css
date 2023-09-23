@@ -1,13 +1,13 @@
-div.account-table {
+.sbs-budget div.account-table {
     grid-template-columns: 2fr 1fr 1fr;
 }
 
-div.account-table > span:nth-child(-n + 3) {
+.sbs-budget div.account-table > span:nth-child(-n + 3) {
     background-color: var(--table-header-bg-color);
 }
 
-div.account-table > span:nth-child(6n + 1),
-div.account-table > span:nth-child(6n + 2),
-div.account-table > span:nth-child(6n + 3) {
+.sbs-budget div.account-table > span:nth-child(6n + 1),
+.sbs-budget div.account-table > span:nth-child(6n + 2),
+.sbs-budget div.account-table > span:nth-child(6n + 3) {
     background-color: var(--table-even-row-bg-color);
 }

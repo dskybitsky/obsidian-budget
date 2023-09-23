@@ -1,4 +1,4 @@
-div.transaction-plate {
+.sbs-budget div.transaction-plate {
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;

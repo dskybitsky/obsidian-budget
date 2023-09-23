@@ -3118,7 +3118,7 @@ side-channel@^1.0.4:
 
 "skybitsky-common@git+ssh://git@github.com:dskybitsky/obsidian-common.git#feature/0.2":
   version "0.1.0"
-  resolved "git+ssh://git@github.com:dskybitsky/obsidian-common.git#54894d070ab3bf5e8039f85a22ca9962e020d7c1"
+  resolved "git+ssh://git@github.com:dskybitsky/obsidian-common.git#7149e835330c31702815c9737c167aa9b141808d"
   dependencies:
     obsidian latest
     obsidian-dataview "0.5.56"

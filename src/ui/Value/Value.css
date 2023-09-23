@@ -1,7 +1,7 @@
-span.value-in {
+.sbs-budget span.value-in {
     color: var(--color-green);
 }
 
-span.value-out {
+.sbs-budget span.value-out {
     color: var(--color-red);
 }

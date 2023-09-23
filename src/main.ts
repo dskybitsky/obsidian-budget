@@ -2,8 +2,8 @@ import { App, Plugin } from 'obsidian';
 import type { MarkdownPostProcessorContext, PluginManifest } from 'obsidian';
 import { DataviewApi, getAPI as getDataviewApi } from 'obsidian-dataview';
 import { createRoot, Root } from 'react-dom/client';
-import { createElement, ReactNode } from 'react';
-import { Loading, Reader, Writer } from 'skybitsky-common';
+import { createElement, ReactElement, ReactNode } from 'react';
+import { Container, Reader, Writer } from 'skybitsky-common';
 import {
     Account,
     Period,
@@ -11,6 +11,7 @@ import {
     Transaction,
 } from './ui';
 import { Budget, BudgetInterface } from './services';
+import './styles.css';
 
 import {
     SBS_BUDGET_ACCOUNT,
@@ -95,22 +96,50 @@ export default class BudgetPlugin extends Plugin {
     protected registerMarkdownCodeBlockProcessors(): void {
         this.registerMarkdownCodeBlockProcessor(
             SBS_BUDGET_ACCOUNT,
-            (_, container, context) => this.handleAccountBlock(container, context),
+            (_, container, context) => this.processBlock(
+                container,
+                context,
+                createElement(Account, {
+                    budget: this.budget,
+                    path: context.sourcePath,
+                }),
+            ),
         );
 
         this.registerMarkdownCodeBlockProcessor(
             SBS_BUDGET_PERIOD,
-            (_, container, context) => this.handlePeriodBlock(container, context),
+            (_, container, context) => this.processBlock(
+                container,
+                context,
+                createElement(Period, {
+                    budget: this.budget,
+                    path: context.sourcePath,
+                }),
+            ),
         );
 
         this.registerMarkdownCodeBlockProcessor(
             SBS_BUDGET_CATEGORY,
-            (_, container, context) => this.handleCategoryBlock(container, context),
+            (_, container, context) => this.processBlock(
+                container,
+                context,
+                createElement(Category, {
+                    budget: this.budget,
+                    path: context.sourcePath,
+                }),
+            ),
         );
 
         this.registerMarkdownCodeBlockProcessor(
             SBS_BUDGET_TRANSACTION,
-            (_, container, context) => this.handleTransactionBlock(container, context),
+            (_, container, context) => this.processBlock(
+                container,
+                context,
+                createElement(Transaction, {
+                    budget: this.budget,
+                    path: context.sourcePath,
+                }),
+            ),
         );
     }
 
@@ -132,80 +161,19 @@ export default class BudgetPlugin extends Plugin {
         );
     }
 
-    protected handleAccountBlock(
+    protected processBlock(
         container: HTMLElement,
         context: MarkdownPostProcessorContext,
+        child: ReactElement,
     ): void {
         const root = createRoot(container);
 
         this.addRoot(root, context.sourcePath);
 
-        const elementFactory = () => createElement(Loading, {
+        const elementFactory = () => createElement(Container, {
             loading: !this.dataviewApi.index.initialized,
-        }, createElement(Account, {
-            budget: this.budget,
-            path: context.sourcePath,
-        }));
-
-        this.elementsFactoriesIndex.set(root, elementFactory);
-
-        root.render(elementFactory());
-    }
-
-    protected handlePeriodBlock(
-        container: HTMLElement,
-        context: MarkdownPostProcessorContext,
-    ): void {
-        const root = createRoot(container);
-
-        this.addRoot(root, context.sourcePath);
-
-        const elementFactory = () => createElement(Loading, {
-            loading: !this.dataviewApi.index.initialized,
-        }, createElement(Period, {
-            budget: this.budget,
-            path: context.sourcePath,
-        }));
-
-        this.elementsFactoriesIndex.set(root, elementFactory);
-
-        root.render(elementFactory());
-    }
-
-    protected handleCategoryBlock(
-        container: HTMLElement,
-        context: MarkdownPostProcessorContext,
-    ): void {
-        const root = createRoot(container);
-
-        this.addRoot(root, context.sourcePath);
-
-        const elementFactory = () => createElement(Loading, {
-            loading: !this.dataviewApi.index.initialized,
-        }, createElement(Category, {
-            budget: this.budget,
-            path: context.sourcePath,
-        }));
-
-        this.elementsFactoriesIndex.set(root, elementFactory);
-
-        root.render(elementFactory());
-    }
-
-    protected handleTransactionBlock(
-        container: HTMLElement,
-        context: MarkdownPostProcessorContext,
-    ): void {
-        const root = createRoot(container);
-
-        this.addRoot(root, context.sourcePath);
-
-        const elementFactory = () => createElement(Loading, {
-            loading: !this.dataviewApi.index.initialized,
-        }, createElement(Transaction, {
-            budget: this.budget,
-            path: context.sourcePath,
-        }));
+            className: 'sbs-budget',
+        }, child);
 
         this.elementsFactoriesIndex.set(root, elementFactory);
 
