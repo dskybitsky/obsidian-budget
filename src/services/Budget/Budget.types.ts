@@ -15,6 +15,7 @@ export type PeriodDto = {
 export type CategoryDto = {
     name: string;
     title: string;
+    icon?: string;
     value: number;
     categories: CategoryDto[];
     total: { plan: number; fact: number };
@@ -27,8 +28,8 @@ export type TransactionDto = {
     name: string;
     title: string;
     value: number;
-    date: Date;
     type: 'plan' | 'fact';
+    date: Date;
     path: string;
 };
 

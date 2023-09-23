@@ -3,6 +3,7 @@ import { CategoryDto, TransactionDto, TransactionCreateDto } from '../../../serv
 import { Summary } from './Summary';
 import { Table } from './Table';
 import { Form } from './Form';
+import { Icon } from '../../Icon';
 
 export interface PageProps {
     category: CategoryDto;
@@ -33,6 +34,7 @@ export const Page = ({ category, transactions, onCreate }: PageProps) => {
     return (
         <div className="category">
             <h1>
+                {category.icon && <Icon name={category.icon} size={32} />}
                 <span>{category.title}</span>
             </h1>
             <Summary planTotal={planTotal} factTotal={factTotal} />

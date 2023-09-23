@@ -3,6 +3,7 @@ import { InternalLink } from 'skybitsky-common';
 import { CategoryDto } from '../../../../services';
 import { Value } from '../../../Value';
 import './Table.css';
+import { Icon } from '../../../Icon';
 
 export interface TableProps {
     plan: number;
@@ -27,11 +28,11 @@ export const Table = ({
 
         const showCurrentRow = !hideZeroes || Math.abs(categoryRest) > 0.001;
 
-        // @todo icon
         return showCurrentRow
             ? [
                 <Fragment key={category.name}>
                     <span style={firstSpanStyle}>
+                        {category.icon && <Icon name={category.icon} />}
                         <InternalLink path={category.path}>{category.title}</InternalLink>
                     </span>
                     <span><Value value={category.total.plan} /></span>

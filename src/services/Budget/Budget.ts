@@ -119,6 +119,7 @@ export class Budget implements BudgetInterface {
         return {
             name,
             title: page.title ?? name,
+            icon: page.icon,
             value: parseFloat(page.value ?? 0),
             categories,
             total: { plan, fact },
@@ -160,7 +161,7 @@ export class Budget implements BudgetInterface {
             value: parseFloat(page.value ?? 0),
             type: page.type === 'plan' ? 'plan' : 'fact',
             path: page.file.path,
-            date: page.date ? new Date(page.date) : page.file.ctime,
+            date: page.date ? new Date(page.date) : page.file.ctime.toJSDate(),
         };
     }
 
