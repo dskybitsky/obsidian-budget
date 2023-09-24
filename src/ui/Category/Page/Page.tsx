@@ -30,7 +30,6 @@ export const Page = ({ category, transactions, onCreate }: PageProps) => {
         0,
     );
 
-    // @todo icon
     return (
         <div className="category">
             <h1>

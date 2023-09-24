@@ -55,6 +55,8 @@ export default class BudgetPlugin extends Plugin {
 
     readonly elementsFactoriesIndex: Map<Root, () => ReactNode> = new Map();
 
+    readonly renderMode = 'all';
+
     constructor(app: App, manifest: PluginManifest) {
         super(app, manifest);
 
@@ -173,7 +175,7 @@ export default class BudgetPlugin extends Plugin {
     ): void {
         const root = createRoot(container);
 
-        this.addRoot(root, context.sourcePath);
+        this.registerRoot(root, context.sourcePath);
 
         const elementFactory = () => createElement(Container, {
             loading: !this.dataviewApi.index.initialized,
@@ -186,9 +188,7 @@ export default class BudgetPlugin extends Plugin {
     }
 
     protected onDataviewIndexReady() {
-        for (const [root, elementFactory] of this.elementsFactoriesIndex) {
-            root.render(elementFactory());
-        }
+        this.renderAllRoots();
     }
 
     protected onDataviewMetadataChange(_type: string, page: any) {
@@ -196,31 +196,44 @@ export default class BudgetPlugin extends Plugin {
             return;
         }
 
-        const roots = this.rootsIndex.get(BudgetPlugin.getFolder(page.path));
+        this.renderRootsByPath(BudgetPlugin.getRootFolder(page.path));
+    }
 
-        if (!roots) {
-            return;
+    protected registerRoot(root: Root, path: string) {
+        if (!this.rootsIndex.has(path)) {
+            this.rootsIndex.set(path, []);
         }
 
-        for (const root of roots) {
-            const elementFactory = this.elementsFactoriesIndex.get(root);
+        this.rootsIndex.get(path).push(root);
 
-            if (!elementFactory) {
-                return;
-            }
+        const parentPath = BudgetPlugin.getFolder(path);
 
+        if (parentPath !== path) {
+            this.registerRoot(root, parentPath);
+        }
+    }
+
+    protected renderAllRoots(): void {
+        for (const [root, elementFactory] of this.elementsFactoriesIndex) {
             root.render(elementFactory());
         }
     }
 
-    protected addRoot(root: Root, path: string) {
-        const folder = BudgetPlugin.getFolder(path);
-
-        if (!this.rootsIndex.has(folder)) {
-            this.rootsIndex.set(folder, []);
+    protected renderRootsByPath(path: string): void {
+        if (!this.rootsIndex.has(path)) {
+            return;
         }
 
-        this.rootsIndex.get(folder).push(root);
+        const roots = this.rootsIndex.get(path);
+
+        for (const root of roots) {
+            const elementFactory = this.elementsFactoriesIndex.get(root);
+            root.render(elementFactory());
+        }
+    }
+
+    protected static getRootFolder(path: string): string {
+        return path.split('/')[0];
     }
 
     protected static getFolder(path: string): string {

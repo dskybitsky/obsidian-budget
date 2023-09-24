@@ -9,7 +9,7 @@ export interface TableProps {
     periods: PeriodDto[];
     transactions: TransactionDto[][];
 }
-// @todo create base component table
+
 export const Table = ({ value, periods, transactions }: TableProps) => {
     const getValueEnd = (periodTransactions: TransactionDto[]) => periodTransactions.reduce(
         (sum, transaction) => sum + (transaction.type === 'fact' ? transaction.value : 0),

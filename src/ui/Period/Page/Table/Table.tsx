@@ -11,7 +11,7 @@ export interface TableProps {
     categories: CategoryDto[];
     hideZeroes?: boolean;
 }
-// @todo create base component table
+
 export const Table = ({
     plan,
     fact,

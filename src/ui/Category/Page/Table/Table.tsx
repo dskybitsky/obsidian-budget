@@ -9,7 +9,6 @@ export interface TableProps {
     transactions: TransactionDto[];
 }
 
-// @todo create base component table
 export const Table = ({ transactions }: TableProps) => (
     <div className="table category-table">
         <span><strong>Дата</strong></span>
