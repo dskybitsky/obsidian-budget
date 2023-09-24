@@ -21,9 +21,7 @@ export const Period = ({ budget, path }: PeriodProps) => {
             localStorage.getItem(localStorageHideZerosParam),
         );
 
-        if (localStorageHideZeros !== undefined) {
-            setHideZeros(localStorageHideZeros);
-        }
+        setHideZeros(localStorageHideZeros ?? false);
     }, []);
 
     useEffect(() => {
@@ -39,7 +37,7 @@ export const Period = ({ budget, path }: PeriodProps) => {
         <Page
             period={period}
             categories={categories}
-            hideZeroes={hideZeros}
+            hideZeroes={hideZeros ?? false}
             onHideZeroesChange={(value) => setHideZeros(value)}
         />
     );

@@ -3118,11 +3118,12 @@ side-channel@^1.0.4:
 
 "skybitsky-common@git+ssh://git@github.com:dskybitsky/obsidian-common.git#feature/0.2":
   version "0.1.0"
-  resolved "git+ssh://git@github.com:dskybitsky/obsidian-common.git#7149e835330c31702815c9737c167aa9b141808d"
+  resolved "git+ssh://git@github.com:dskybitsky/obsidian-common.git#62555ba7d869ad3a2956c12614e0ff62f99bdf73"
   dependencies:
     obsidian latest
     obsidian-dataview "0.5.56"
     react "^18.2.0"
+    react-dom "^18.2.0"
     yaml "^2.3.2"
 
 slash@^3.0.0:

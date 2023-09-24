@@ -10,7 +10,7 @@ import { Table } from './Table';
 export interface PageProps {
     period: PeriodDto;
     categories: CategoryDto[];
-    hideZeroes?: boolean;
+    hideZeroes: boolean;
     onHideZeroesChange: (value: boolean) => void;
 }
 

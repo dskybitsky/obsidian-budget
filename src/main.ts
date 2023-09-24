@@ -1,14 +1,14 @@
-import { App, Plugin } from 'obsidian';
+import { App } from 'obsidian';
 import type { MarkdownPostProcessorContext, PluginManifest } from 'obsidian';
-import { DataviewApi, getAPI as getDataviewApi } from 'obsidian-dataview';
-import { createRoot, Root } from 'react-dom/client';
+import { DataviewApi } from 'obsidian-dataview';
+import { createRoot } from 'react-dom/client';
+import { createElement, ReactElement } from 'react';
 import {
-    cloneElement,
-    createElement,
-    ReactElement,
-    ReactNode,
-} from 'react';
-import { Container, Reader, Writer } from 'skybitsky-common';
+    Container,
+    ReactPlugin,
+    Reader,
+    Writer,
+} from 'skybitsky-common';
 import {
     Account,
     Period,
@@ -25,22 +25,7 @@ import {
     SBS_BUDGET_TRANSACTION,
 } from './constants';
 
-declare module 'obsidian' {
-    interface MetadataCache {
-        on(
-            name: 'dataview:index-ready',
-            callback: () => void,
-            ctx?: any,
-        ): EventRef;
-        on(
-            name: 'dataview:metadata-change',
-            callback: (type: string, page: any) => void,
-            ctx?: any,
-        ): EventRef;
-    }
-}
-
-export default class BudgetPlugin extends Plugin {
+export default class BudgetPlugin extends ReactPlugin {
     settings: BudgetPluginSettings = DEFAULT_SETTINGS;
 
     dataviewApi: DataviewApi;
@@ -51,22 +36,8 @@ export default class BudgetPlugin extends Plugin {
 
     budget: BudgetInterface;
 
-    readonly rootsIndex: Map<string, Root[]> = new Map();
-
-    readonly elementsFactoriesIndex: Map<Root, () => ReactNode> = new Map();
-
-    readonly renderMode = 'all';
-
     constructor(app: App, manifest: PluginManifest) {
         super(app, manifest);
-
-        const dataviewApi = getDataviewApi();
-
-        if (!dataviewApi) {
-            throw new Error('Dataview Plugin required');
-        }
-
-        this.dataviewApi = dataviewApi;
 
         this.reader = new Reader(this.dataviewApi);
         this.writer = new Writer(app.vault);
@@ -77,16 +48,9 @@ export default class BudgetPlugin extends Plugin {
     async onload() {
         await this.loadSettings();
 
-        this.registerMarkdownCodeBlockProcessors();
-        this.registerEvents();
-    }
+        super.onload();
 
-    onunload() {
-        for (const [, roots] of this.rootsIndex) {
-            for (const root of roots) {
-                root.unmount();
-            }
-        }
+        this.registerMarkdownCodeBlockProcessors();
     }
 
     async loadSettings() {
@@ -106,7 +70,7 @@ export default class BudgetPlugin extends Plugin {
             (_, container, context) => this.processBlock(
                 container,
                 context,
-                createElement(Account, {
+                () => createElement(Account, {
                     budget: this.budget,
                     path: context.sourcePath,
                 }),
@@ -118,7 +82,7 @@ export default class BudgetPlugin extends Plugin {
             (_, container, context) => this.processBlock(
                 container,
                 context,
-                createElement(Period, {
+                () => createElement(Period, {
                     budget: this.budget,
                     path: context.sourcePath,
                 }),
@@ -130,7 +94,7 @@ export default class BudgetPlugin extends Plugin {
             (_, container, context) => this.processBlock(
                 container,
                 context,
-                createElement(Category, {
+                () => createElement(Category, {
                     budget: this.budget,
                     path: context.sourcePath,
                 }),
@@ -142,7 +106,7 @@ export default class BudgetPlugin extends Plugin {
             (_, container, context) => this.processBlock(
                 container,
                 context,
-                createElement(Transaction, {
+                () => createElement(Transaction, {
                     budget: this.budget,
                     path: context.sourcePath,
                 }),
@@ -150,94 +114,21 @@ export default class BudgetPlugin extends Plugin {
         );
     }
 
-    protected registerEvents(): void {
-        this.registerEvent(
-            this.app.metadataCache.on(
-                'dataview:index-ready',
-                this.onDataviewIndexReady,
-                this,
-            ),
-        );
-
-        this.registerEvent(
-            this.app.metadataCache.on(
-                'dataview:metadata-change',
-                this.onDataviewMetadataChange,
-                this,
-            ),
-        );
-    }
-
     protected processBlock(
         container: HTMLElement,
         context: MarkdownPostProcessorContext,
-        child: ReactElement,
+        elementFactory: () => ReactElement,
     ): void {
         const root = createRoot(container);
 
-        this.registerRoot(root, context.sourcePath);
-
-        const elementFactory = () => createElement(Container, {
+        const containerFactory = () => createElement(Container, {
             loading: !this.dataviewApi.index.initialized,
             className: 'sbs-budget',
-        }, cloneElement(child));
+        }, elementFactory());
 
-        this.elementsFactoriesIndex.set(root, elementFactory);
+        this.registerElement(root, context.sourcePath, containerFactory);
 
-        root.render(elementFactory());
-    }
-
-    protected onDataviewIndexReady() {
-        this.renderAllRoots();
-    }
-
-    protected onDataviewMetadataChange(_type: string, page: any) {
-        if (!page.path) {
-            return;
-        }
-
-        this.renderRootsByPath(BudgetPlugin.getRootFolder(page.path));
-    }
-
-    protected registerRoot(root: Root, path: string) {
-        if (!this.rootsIndex.has(path)) {
-            this.rootsIndex.set(path, []);
-        }
-
-        this.rootsIndex.get(path).push(root);
-
-        const parentPath = BudgetPlugin.getFolder(path);
-
-        if (parentPath !== path) {
-            this.registerRoot(root, parentPath);
-        }
-    }
-
-    protected renderAllRoots(): void {
-        for (const [root, elementFactory] of this.elementsFactoriesIndex) {
-            root.render(elementFactory());
-        }
-    }
-
-    protected renderRootsByPath(path: string): void {
-        if (!this.rootsIndex.has(path)) {
-            return;
-        }
-
-        const roots = this.rootsIndex.get(path);
-
-        for (const root of roots) {
-            const elementFactory = this.elementsFactoriesIndex.get(root);
-            root.render(elementFactory());
-        }
-    }
-
-    protected static getRootFolder(path: string): string {
-        return path.split('/')[0];
-    }
-
-    protected static getFolder(path: string): string {
-        return path.split('/').slice(0, -1).join('/');
+        root.render(containerFactory());
     }
 }
 
