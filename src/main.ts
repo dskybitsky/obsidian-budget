@@ -1,9 +1,14 @@
-import { App, Plugin } from 'obsidian';
+import { App } from 'obsidian';
 import type { MarkdownPostProcessorContext, PluginManifest } from 'obsidian';
-import { DataviewApi, getAPI as getDataviewApi } from 'obsidian-dataview';
-import { createRoot, Root } from 'react-dom/client';
-import { createElement, ReactNode } from 'react';
-import { Loading, Reader } from 'skybitsky-common';
+import { DataviewApi } from 'obsidian-dataview';
+import { createRoot } from 'react-dom/client';
+import { createElement, ReactElement } from 'react';
+import {
+    Container,
+    ReactPlugin,
+    Reader,
+    Writer,
+} from 'skybitsky-common';
 import {
     Account,
     Period,
@@ -11,65 +16,41 @@ import {
     Transaction,
 } from './ui';
 import { Budget, BudgetInterface } from './services';
+import './styles.css';
 
-const SBS_BUDGET_ACCOUNT = CSS.escape('sbs:budget:account');
-const SBS_BUDGET_PERIOD = CSS.escape('sbs:budget:period');
-const SBS_BUDGET_CATEGORY = CSS.escape('sbs:budget:category');
-const SBS_BUDGET_TRANSACTION = CSS.escape('sbs:budget:transaction');
+import {
+    SBS_BUDGET_ACCOUNT,
+    SBS_BUDGET_CATEGORY,
+    SBS_BUDGET_PERIOD,
+    SBS_BUDGET_TRANSACTION,
+} from './constants';
 
-declare module 'obsidian' {
-    interface MetadataCache {
-        on(
-            name: 'dataview:index-ready',
-            callback: () => void,
-            ctx?: any,
-        ): EventRef;
-        on(
-            name: 'dataview:metadata-change',
-            callback: (type: string, page: any) => void,
-            ctx?: any,
-        ): EventRef;
-    }
-}
-
-export default class BudgetPlugin extends Plugin {
+export default class BudgetPlugin extends ReactPlugin {
     settings: BudgetPluginSettings = DEFAULT_SETTINGS;
 
     dataviewApi: DataviewApi;
 
     reader: Reader;
 
+    writer: Writer;
+
     budget: BudgetInterface;
-
-    readonly rootsIndex: Map<string, Root> = new Map();
-
-    readonly elementsFactoriesIndex: Map<Root, () => ReactNode> = new Map();
 
     constructor(app: App, manifest: PluginManifest) {
         super(app, manifest);
 
-        const dataviewApi = getDataviewApi();
-
-        if (!dataviewApi) {
-            throw new Error('Dataview Plugin required');
-        }
-
-        this.dataviewApi = dataviewApi;
         this.reader = new Reader(this.dataviewApi);
-        this.budget = new Budget(this.reader);
+        this.writer = new Writer(app.vault);
+
+        this.budget = new Budget(this.reader, this.writer);
     }
 
     async onload() {
         await this.loadSettings();
 
-        this.registerMarkdownCodeBlockProcessors();
-        this.registerEvents();
-    }
+        super.onload();
 
-    onunload() {
-        for (const [, root] of this.rootsIndex) {
-            root.unmount();
-        }
+        this.registerMarkdownCodeBlockProcessors();
     }
 
     async loadSettings() {
@@ -86,147 +67,68 @@ export default class BudgetPlugin extends Plugin {
     protected registerMarkdownCodeBlockProcessors(): void {
         this.registerMarkdownCodeBlockProcessor(
             SBS_BUDGET_ACCOUNT,
-            (_, container, context) => this.handleAccountBlock(container, context),
+            (_, container, context) => this.processBlock(
+                container,
+                context,
+                () => createElement(Account, {
+                    budget: this.budget,
+                    path: context.sourcePath,
+                }),
+            ),
         );
 
         this.registerMarkdownCodeBlockProcessor(
             SBS_BUDGET_PERIOD,
-            (_, container, context) => this.handlePeriodBlock(container, context),
+            (_, container, context) => this.processBlock(
+                container,
+                context,
+                () => createElement(Period, {
+                    budget: this.budget,
+                    path: context.sourcePath,
+                }),
+            ),
         );
 
         this.registerMarkdownCodeBlockProcessor(
             SBS_BUDGET_CATEGORY,
-            (_, container, context) => this.handleCategoryBlock(container, context),
+            (_, container, context) => this.processBlock(
+                container,
+                context,
+                () => createElement(Category, {
+                    budget: this.budget,
+                    path: context.sourcePath,
+                }),
+            ),
         );
 
         this.registerMarkdownCodeBlockProcessor(
             SBS_BUDGET_TRANSACTION,
-            (_, container, context) => this.handleTransactionBlock(container, context),
-        );
-    }
-
-    protected registerEvents(): void {
-        this.registerEvent(
-            this.app.metadataCache.on(
-                'dataview:index-ready',
-                this.onDataviewIndexReady,
-                this,
-            ),
-        );
-
-        this.registerEvent(
-            this.app.metadataCache.on(
-                'dataview:metadata-change',
-                this.onDataviewMetadataChange,
-                this,
+            (_, container, context) => this.processBlock(
+                container,
+                context,
+                () => createElement(Transaction, {
+                    budget: this.budget,
+                    path: context.sourcePath,
+                }),
             ),
         );
     }
 
-    protected handleAccountBlock(
+    protected processBlock(
         container: HTMLElement,
         context: MarkdownPostProcessorContext,
+        elementFactory: () => ReactElement,
     ): void {
         const root = createRoot(container);
 
-        this.rootsIndex.set(context.sourcePath, root);
-
-        const elementFactory = () => createElement(Loading, {
+        const containerFactory = () => createElement(Container, {
             loading: !this.dataviewApi.index.initialized,
-        }, createElement(Account, {
-            budget: this.budget,
-            path: context.sourcePath,
-        }));
+            className: 'sbs-budget',
+        }, elementFactory());
 
-        this.elementsFactoriesIndex.set(root, elementFactory);
+        this.registerElement(root, context.sourcePath, containerFactory);
 
-        root.render(elementFactory());
-    }
-
-    protected handlePeriodBlock(
-        container: HTMLElement,
-        context: MarkdownPostProcessorContext,
-    ): void {
-        const root = createRoot(container);
-
-        this.rootsIndex.set(context.sourcePath, root);
-
-        const elementFactory = () => createElement(Loading, {
-            loading: !this.dataviewApi.index.initialized,
-        }, createElement(Period, {
-            budget: this.budget,
-            path: context.sourcePath,
-        }));
-
-        this.elementsFactoriesIndex.set(root, elementFactory);
-
-        root.render(elementFactory());
-    }
-
-    protected handleCategoryBlock(
-        container: HTMLElement,
-        context: MarkdownPostProcessorContext,
-    ): void {
-        const root = createRoot(container);
-
-        this.rootsIndex.set(context.sourcePath, root);
-
-        const elementFactory = () => createElement(Loading, {
-            loading: !this.dataviewApi.index.initialized,
-        }, createElement(Category, {
-            budget: this.budget,
-            path: context.sourcePath,
-        }));
-
-        this.elementsFactoriesIndex.set(root, elementFactory);
-
-        root.render(elementFactory());
-    }
-
-    protected handleTransactionBlock(
-        container: HTMLElement,
-        context: MarkdownPostProcessorContext,
-    ): void {
-        const root = createRoot(container);
-
-        this.rootsIndex.set(context.sourcePath, root);
-
-        const elementFactory = () => createElement(Loading, {
-            loading: !this.dataviewApi.index.initialized,
-        }, createElement(Transaction, {
-            budget: this.budget,
-            path: context.sourcePath,
-        }));
-
-        this.elementsFactoriesIndex.set(root, elementFactory);
-
-        root.render(elementFactory());
-    }
-
-    protected onDataviewIndexReady() {
-        for (const [root, elementFactory] of this.elementsFactoriesIndex) {
-            root.render(elementFactory());
-        }
-    }
-
-    protected onDataviewMetadataChange(_type: string, page: any) {
-        if (!page.path) {
-            return;
-        }
-
-        const root = this.rootsIndex.get(page.path);
-
-        if (!root) {
-            return;
-        }
-
-        const elementFactory = this.elementsFactoriesIndex.get(root);
-
-        if (!elementFactory) {
-            return;
-        }
-
-        root.render(elementFactory());
+        root.render(containerFactory());
     }
 }
 

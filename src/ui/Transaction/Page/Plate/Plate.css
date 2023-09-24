@@ -1,0 +1,8 @@
+.sbs-budget div.transaction-plate {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    font-size: var(--nav-item-size);
+    font-weight: var(--nav-item-weight);
+    color: var(--nav-item-color);
+}

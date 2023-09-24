@@ -1,0 +1,4 @@
+.sbs-budget div.transaction-plate-block > span:first-child {
+    margin-inline-end: 0.5rem;
+    font-weight: bold;
+}

@@ -1,0 +1,13 @@
+.sbs-budget div.category-table {
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.sbs-budget div.category-table > span:nth-child(6n + 1),
+.sbs-budget div.category-table > span:nth-child(6n + 2),
+.sbs-budget div.category-table > span:nth-child(6n + 3) {
+    background-color: var(--table-even-row-bg-color);
+}
+
+.sbs-budget div.category-table > span:nth-child(-n + 3) {
+    background-color: var(--table-header-bg-color);
+}
