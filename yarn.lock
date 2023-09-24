@@ -3116,9 +3116,9 @@ side-channel@^1.0.4:
     get-intrinsic "^1.0.2"
     object-inspect "^1.9.0"
 
-"skybitsky-common@git+ssh://git@github.com:dskybitsky/obsidian-common.git#feature/0.2":
+"skybitsky-common@git+ssh://git@github.com:dskybitsky/obsidian-common.git#0.2.0":
   version "0.1.0"
-  resolved "git+ssh://git@github.com:dskybitsky/obsidian-common.git#62555ba7d869ad3a2956c12614e0ff62f99bdf73"
+  resolved "git+ssh://git@github.com:dskybitsky/obsidian-common.git#5953da650ba22ae117313e9990f978c82ef3e2ac"
   dependencies:
     obsidian latest
     obsidian-dataview "0.5.56"
