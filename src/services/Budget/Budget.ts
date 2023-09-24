@@ -2,10 +2,11 @@ import { Reader, Writer } from 'skybitsky-common';
 import {
     AccountDto,
     CategoryDto,
-    PeriodDto, TransactionCreateDto,
+    PeriodDto,
     TransactionDto,
+    TransactionCreateDto,
 } from './Budget.types';
-import { SBS_BUDGET_TRANSACTION } from '../../constants';
+import { SBS_BUDGET_TRANSACTION } from '../../core/constants';
 
 export interface BudgetInterface {
     getAccount(path: string): AccountDto | undefined;
