@@ -70,7 +70,7 @@ export class Plugin extends ReactPlugin implements PluginInterface {
 
     protected registerMarkdownCodeBlockProcessors(): void {
         this.registerMarkdownCodeBlockProcessor(
-            SBS_BUDGET_ACCOUNT,
+            CSS.escape(SBS_BUDGET_ACCOUNT),
             (_, container, context) => this.processBlock(
                 container,
                 context,
@@ -82,7 +82,7 @@ export class Plugin extends ReactPlugin implements PluginInterface {
         );
 
         this.registerMarkdownCodeBlockProcessor(
-            SBS_BUDGET_PERIOD,
+            CSS.escape(SBS_BUDGET_PERIOD),
             (_, container, context) => this.processBlock(
                 container,
                 context,
@@ -94,7 +94,7 @@ export class Plugin extends ReactPlugin implements PluginInterface {
         );
 
         this.registerMarkdownCodeBlockProcessor(
-            SBS_BUDGET_CATEGORY,
+            CSS.escape(SBS_BUDGET_CATEGORY),
             (_, container, context) => this.processBlock(
                 container,
                 context,
@@ -106,7 +106,7 @@ export class Plugin extends ReactPlugin implements PluginInterface {
         );
 
         this.registerMarkdownCodeBlockProcessor(
-            SBS_BUDGET_TRANSACTION,
+            CSS.escape(SBS_BUDGET_TRANSACTION),
             (_, container, context) => this.processBlock(
                 container,
                 context,

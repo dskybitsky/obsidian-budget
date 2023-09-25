@@ -10,8 +10,9 @@ export interface TransactionProps {
 
 export const Transaction = ({ budget, path }: TransactionProps) => {
     const transaction = budget.getTransaction(path);
+    const parent = budget.getParent(path, 1);
 
     setActiveTabTitle(transaction.title);
 
-    return <Page transaction={transaction} />;
+    return <Page parent={parent} transaction={transaction} />;
 };

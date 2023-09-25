@@ -1,17 +1,28 @@
 import React from 'react';
-import { CategoryDto, TransactionDto, TransactionCreateDto } from '../../../services';
+import {
+    Dto,
+    CategoryDto,
+    TransactionDto,
+    TransactionCreateDto,
+} from '../../../services';
 import { Summary } from './Summary';
 import { Table } from './Table';
 import { Form } from './Form';
-import { Icon } from '../../Icon';
+import { Header } from '../../Header';
 
 export interface PageProps {
+    parent: Dto,
     category: CategoryDto;
     transactions: TransactionDto[];
     onCreate: (transaction: TransactionCreateDto) => void;
 }
 
-export const Page = ({ category, transactions, onCreate }: PageProps) => {
+export const Page = ({
+    parent,
+    category,
+    transactions,
+    onCreate,
+}: PageProps) => {
     const planTransactions = transactions.filter(
         (transaction) => transaction.type === 'plan',
     );
@@ -32,10 +43,7 @@ export const Page = ({ category, transactions, onCreate }: PageProps) => {
 
     return (
         <div className="category">
-            <h1>
-                {category.icon && <Icon name={category.icon} size={32} />}
-                <span>{category.title}</span>
-            </h1>
+            <Header parent={parent} title={category.title} icon={category.icon} />
             <Summary planTotal={planTotal} factTotal={factTotal} />
             <h2>Фактические</h2>
             <Form onCreate={onCreate} type="fact" dir={category.dir} />

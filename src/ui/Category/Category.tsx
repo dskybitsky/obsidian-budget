@@ -10,8 +10,9 @@ export interface CategoryProps {
 
 export const Category = ({ budget, path }: CategoryProps) => {
     const category = budget.getCategory(path);
-
     const transactions = budget.getTransactions(path, true);
+
+    const parent = budget.getParent(path);
 
     const [
         newTransaction,
@@ -39,6 +40,7 @@ export const Category = ({ budget, path }: CategoryProps) => {
 
     return (
         <Page
+            parent={parent}
             category={category}
             transactions={transactions}
             onCreate={(value) => setNewTransaction(value)}

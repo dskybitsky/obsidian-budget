@@ -16,6 +16,8 @@ export const Period = ({ budget, path }: PeriodProps) => {
     const period = budget.getPeriod(path);
     const categories = budget.getCategories(path);
 
+    const parent = budget.getParent(path);
+
     useEffect(() => {
         const localStorageHideZeros = JSON.parse(
             localStorage.getItem(localStorageHideZerosParam),
@@ -35,6 +37,7 @@ export const Period = ({ budget, path }: PeriodProps) => {
 
     return (
         <Page
+            parent={parent}
             period={period}
             categories={categories}
             hideZeroes={hideZeros ?? false}

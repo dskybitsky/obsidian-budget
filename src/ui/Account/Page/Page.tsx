@@ -2,6 +2,7 @@ import React from 'react';
 import { AccountDto, PeriodDto, TransactionDto } from '../../../services';
 import { Summary } from './Summary';
 import { Table } from './Table';
+import { Header } from '../../Header';
 
 export interface PageProps {
     account: AccountDto;
@@ -11,7 +12,7 @@ export interface PageProps {
 
 export const Page = ({ account, periods, transactions }: PageProps) => (
     <div className="account">
-        <h1>{account.title}</h1>
+        <Header title={account.title} />
         <Summary value={account.value} />
         <Table
             value={account.value}

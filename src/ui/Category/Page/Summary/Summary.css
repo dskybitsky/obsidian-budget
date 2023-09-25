@@ -1,0 +1,9 @@
+.sbs-budget .category .summary > span:nth-child(-n + 2){
+    display: none;
+}
+
+@media (min-width: 840px) {
+    .sbs-budget .category .summary > span:nth-child(-n + 2){
+        display: flex;
+    }
+}

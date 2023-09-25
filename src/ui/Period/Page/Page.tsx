@@ -1,13 +1,16 @@
 import React from 'react';
 import { ToolBar, ToolBarCheck } from 'skybitsky-common';
 import {
+    Dto,
     CategoryDto,
     PeriodDto,
 } from '../../../services';
 import { Summary } from './Summary';
 import { Table } from './Table';
+import { Header } from '../../Header';
 
 export interface PageProps {
+    parent: Dto,
     period: PeriodDto;
     categories: CategoryDto[];
     hideZeroes: boolean;
@@ -15,6 +18,7 @@ export interface PageProps {
 }
 
 export const Page = ({
+    parent,
     period,
     categories,
     hideZeroes,
@@ -39,7 +43,7 @@ export const Page = ({
                     onChange={onHideZeroesChange}
                 />
             </ToolBar>
-            <h1>{period.title}</h1>
+            <Header title={period.title} parent={parent} />
             <Summary value={period.value} plan={plan} fact={fact} />
             <Table
                 plan={plan}

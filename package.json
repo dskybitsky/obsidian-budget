@@ -39,6 +39,6 @@
         "lucide-react": "^0.279.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "skybitsky-common": "git+ssh://git@github.com:dskybitsky/obsidian-common.git#0.2.0"
+        "skybitsky-common": "git+ssh://git@github.com:dskybitsky/obsidian-common.git#feature/0.2.1"
     }
 }

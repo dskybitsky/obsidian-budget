@@ -1,5 +1,6 @@
-import { Reader, Writer } from 'skybitsky-common';
+import { getFolder, Reader, Writer } from 'skybitsky-common';
 import {
+    Dto,
     AccountDto,
     CategoryDto,
     PeriodDto,
@@ -9,6 +10,7 @@ import {
 import { SBS_BUDGET_TRANSACTION } from '../../core/constants';
 
 export interface BudgetInterface {
+    getParent(path: string, depth?: number): Dto | undefined;
     getAccount(path: string): AccountDto | undefined;
     getPeriods(path: string): PeriodDto[];
     getPeriod(path: string): PeriodDto | undefined;
@@ -24,6 +26,22 @@ export class Budget implements BudgetInterface {
         protected reader: Reader,
         protected writer: Writer,
     ) {}
+
+    getParent(path: string, depth = 2): Dto | undefined {
+        const parentPage = this.reader.getPage(getFolder(path, depth));
+
+        if (!parentPage) {
+            return undefined;
+        }
+
+        const name = Budget.getName(parentPage);
+
+        return {
+            name,
+            title: parentPage.title ?? name,
+            path: parentPage.file.path,
+        };
+    }
 
     getAccount(path: string): AccountDto | undefined {
         const page = this.reader.getPage(path);
