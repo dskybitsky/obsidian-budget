@@ -1,14 +1,16 @@
 import React from 'react';
-import { TransactionDto } from '../../../services';
+import { Dto, TransactionDto } from '../../../services';
 import { Plate } from './Plate';
+import { Header } from '../../Header';
 
 export interface PageProps {
+    parent?: Dto,
     transaction: TransactionDto;
 }
 
-export const Page = ({ transaction }: PageProps) => (
+export const Page = ({ parent, transaction }: PageProps) => (
     <div className="transaction">
-        <h1>{transaction.title}</h1>
+        <Header parent={parent} title={transaction.title} />
         <Plate transaction={transaction} />
     </div>
 );

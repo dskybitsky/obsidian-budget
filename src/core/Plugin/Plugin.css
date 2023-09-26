@@ -23,7 +23,7 @@
 
 .sbs-budget .table > span {
     display: flex;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1rem;
     font-size: var(--font-adaptive-small);
     align-items: center;
 }
@@ -31,15 +31,3 @@
 .sbs-budget .table > span svg:first-child {
     margin-inline-end: 0.25rem;
 }
-
-.sbs-budget h1 {
-    display: flex;
-    line-height: var(--line-height);
-    align-items: center;
-}
-
-.sbs-budget h1 svg:first-child {
-    margin-inline-end: 0.5rem;
-}
-
-

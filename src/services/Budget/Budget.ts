@@ -1,13 +1,17 @@
-import { Reader, Writer } from 'skybitsky-common';
+import { getFolder, Reader, Writer } from 'skybitsky-common';
+import dayjs from 'dayjs';
 import {
+    Dto,
     AccountDto,
     CategoryDto,
-    PeriodDto, TransactionCreateDto,
+    PeriodDto,
     TransactionDto,
+    TransactionCreateDto,
 } from './Budget.types';
-import { SBS_BUDGET_TRANSACTION } from '../../constants';
+import { SBS_BUDGET_TRANSACTION } from '../../core/constants';
 
 export interface BudgetInterface {
+    getParent(path: string, depth?: number): Dto | undefined;
     getAccount(path: string): AccountDto | undefined;
     getPeriods(path: string): PeriodDto[];
     getPeriod(path: string): PeriodDto | undefined;
@@ -23,6 +27,22 @@ export class Budget implements BudgetInterface {
         protected reader: Reader,
         protected writer: Writer,
     ) {}
+
+    getParent(path: string, depth = 2): Dto | undefined {
+        const parentPage = this.reader.getPage(getFolder(path, depth));
+
+        if (!parentPage) {
+            return undefined;
+        }
+
+        const name = Budget.getName(parentPage);
+
+        return {
+            name,
+            title: parentPage.title ?? name,
+            path: parentPage.file.path,
+        };
+    }
 
     getAccount(path: string): AccountDto | undefined {
         const page = this.reader.getPage(path);
@@ -166,11 +186,20 @@ export class Budget implements BudgetInterface {
     }
 
     createTransactionPage(path: string, transaction: TransactionCreateDto) {
-        const filePath = `${path}/${transaction.date.getTime()}.md`;
+        const fileName = Budget.generateTransactionFileName(transaction);
 
-        const content = `\`\`\`\n${SBS_BUDGET_TRANSACTION}\n\`\`\``;
+        const filePath = `${path}/${fileName}.md`;
+
+        const content = `\`\`\`${SBS_BUDGET_TRANSACTION}\n\`\`\``;
 
         return this.writer.createPage(filePath, transaction, content);
+    }
+
+    protected static generateTransactionFileName(transaction: TransactionCreateDto) {
+        const transactionNameNormalized = transaction.name.replace(/[/\\:]/gi, '_');
+        const dateNormalized = dayjs(transaction.date).format('DDMM_HHmmss');
+
+        return `${dateNormalized}_${transaction.type}_${transactionNameNormalized}`;
     }
 
     protected static getName(page: Record<string, any>): string {

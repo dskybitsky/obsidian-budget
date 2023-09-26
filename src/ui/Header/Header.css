@@ -1,0 +1,15 @@
+.sbs-budget h1 {
+    display: flex;
+    line-height: var(--line-height);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.sbs-budget h1 .separator {
+    margin-inline-start: 0.5ch;
+    margin-inline-end: 0.5ch;
+}
+
+.sbs-budget h1 svg {
+    margin-inline-end: 0.5ch;
+}

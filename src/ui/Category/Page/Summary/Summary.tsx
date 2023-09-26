@@ -1,6 +1,7 @@
 import React from 'react';
 import { Value } from '../../../Value';
 import { Summary as SummaryElement } from '../../../Summary';
+import './Summary.css';
 
 export interface SummaryProps {
     factTotal: number;

@@ -34,9 +34,7 @@ export const Table = ({ value, periods, transactions }: TableProps) => {
                 const valueEnd = getValueEnd(transactions[index]);
                 const hasGap = Math.abs(period.value - prevEndValue) > 0.01;
 
-                prevEndValue = valueEnd;
-
-                return (
+                const row = (
                     <Fragment key={period.name}>
                         { hasGap && (
                             <>
@@ -58,6 +56,10 @@ export const Table = ({ value, periods, transactions }: TableProps) => {
                         </span>
                     </Fragment>
                 );
+
+                prevEndValue = valueEnd;
+
+                return row;
             })}
         </div>
     );

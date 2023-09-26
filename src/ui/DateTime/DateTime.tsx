@@ -2,23 +2,22 @@ import React from 'react';
 
 export interface DateTimeProps {
     value: Date;
-    full?: boolean;
+    format?: 'short' | 'long';
 }
 
-export const DateTime = ({ value, full = true }: DateTimeProps) => {
+export const DateTime = ({ value, format = 'short' }: DateTimeProps) => {
     const dateTimeFormatOptions: Intl.DateTimeFormatOptions = {
-        year: '2-digit',
         month: 'numeric',
         day: 'numeric',
         hour: 'numeric',
         minute: 'numeric',
+        ...(format === 'long' ? {
+            year: '2-digit',
+            second: 'numeric',
+        } : {}),
     };
 
-    if (full) {
-        dateTimeFormatOptions.second = 'numeric';
-    }
-
-    const dateTimeFormat = new Intl.DateTimeFormat('ru', dateTimeFormatOptions);
+    const dateTimeFormat = new Intl.DateTimeFormat(undefined, dateTimeFormatOptions);
 
     return <span>{dateTimeFormat.format(value)}</span>;
 };

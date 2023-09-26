@@ -1,5 +1,5 @@
 import React from 'react';
-import { setActiveTabTitle } from 'skybitsky-common';
+import { Message, setActiveTabTitle } from 'skybitsky-common';
 import { BudgetInterface } from '../../services';
 import { Page } from './Page';
 
@@ -11,7 +11,13 @@ export interface TransactionProps {
 export const Transaction = ({ budget, path }: TransactionProps) => {
     const transaction = budget.getTransaction(path);
 
+    if (!transaction) {
+        return <Message severity="error">Error: data not found</Message>;
+    }
+
+    const parent = budget.getParent(path, 1);
+
     setActiveTabTitle(transaction.title);
 
-    return <Page transaction={transaction} />;
+    return <Page parent={parent} transaction={transaction} />;
 };

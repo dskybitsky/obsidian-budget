@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { setActiveTabTitle } from 'skybitsky-common';
+import { Message, setActiveTabTitle } from 'skybitsky-common';
 import { BudgetInterface, TransactionCreateDto } from '../../services';
 import { Page } from './Page';
 
@@ -11,7 +11,13 @@ export interface CategoryProps {
 export const Category = ({ budget, path }: CategoryProps) => {
     const category = budget.getCategory(path);
 
+    if (!category) {
+        return <Message severity="error">Error: data not found</Message>;
+    }
+
     const transactions = budget.getTransactions(path, true);
+
+    const parent = budget.getParent(path);
 
     const [
         newTransaction,
@@ -39,6 +45,7 @@ export const Category = ({ budget, path }: CategoryProps) => {
 
     return (
         <Page
+            parent={parent}
             category={category}
             transactions={transactions}
             onCreate={(value) => setNewTransaction(value)}

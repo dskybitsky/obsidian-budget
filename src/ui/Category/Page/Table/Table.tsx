@@ -13,12 +13,12 @@ export const Table = ({ transactions }: TableProps) => (
     <div className="table category-table">
         <span><strong>Дата</strong></span>
         <span><strong>Описание</strong></span>
-        <span><strong>€</strong></span>
+        <span><strong>Сумма</strong></span>
         {transactions.map((transaction) => (
             <Fragment key={transaction.date.getTime()}>
                 <span>
                     <InternalLink path={transaction.path}>
-                        <DateTime value={transaction.date} />
+                        <DateTime value={transaction.date} format="short" />
                     </InternalLink>
                 </span>
                 <span>{transaction.title}</span>
