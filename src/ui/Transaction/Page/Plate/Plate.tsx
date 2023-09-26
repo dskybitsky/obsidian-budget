@@ -13,7 +13,7 @@ export interface PlateProps {
 export const Plate = ({ transaction }: PlateProps) => (
     <div className="transaction-plate">
         <Block label="Дата:">
-            <DateTime value={transaction.date} full />
+            <DateTime value={transaction.date} format="long" />
         </Block>
         <Block label="Тип:">
             <Type value={transaction.type} />

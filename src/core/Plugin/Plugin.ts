@@ -1,6 +1,5 @@
 import { App } from 'obsidian';
 import type { MarkdownPostProcessorContext, PluginManifest } from 'obsidian';
-import { DataviewApi } from 'obsidian-dataview';
 import { createRoot } from 'react-dom/client';
 import { createElement, ReactElement } from 'react';
 import {
@@ -29,8 +28,6 @@ import { SettingTab } from './SettingTab';
 
 export class Plugin extends ReactPlugin implements PluginInterface {
     settings: Settings = DefaultSettings;
-
-    dataviewApi: DataviewApi;
 
     reader: Reader;
 

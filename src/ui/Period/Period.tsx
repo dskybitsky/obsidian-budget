@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { setActiveTabTitle } from 'skybitsky-common';
+import { Message, setActiveTabTitle } from 'skybitsky-common';
 import { BudgetInterface } from '../../services';
 import { Page } from './Page';
 
@@ -14,16 +14,23 @@ export const Period = ({ budget, path }: PeriodProps) => {
     const [hideZeros, setHideZeros] = useState(false);
 
     const period = budget.getPeriod(path);
+
+    if (!period) {
+        return <Message severity="error">Error: data not found</Message>;
+    }
+
     const categories = budget.getCategories(path);
 
     const parent = budget.getParent(path);
 
     useEffect(() => {
-        const localStorageHideZeros = JSON.parse(
-            localStorage.getItem(localStorageHideZerosParam),
-        );
+        const localStorageHideZeros = localStorage.getItem(localStorageHideZerosParam);
 
-        setHideZeros(localStorageHideZeros ?? false);
+        setHideZeros(
+            localStorageHideZeros
+                ? JSON.parse(localStorageHideZeros)
+                : false,
+        );
     }, []);
 
     useEffect(() => {

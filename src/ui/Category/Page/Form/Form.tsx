@@ -37,7 +37,7 @@ export const Form = ({ type, dir, onCreate }: FormProps) => {
                     name="value"
                     type="number"
                     step="0.01"
-                    placeholder="€"
+                    placeholder="Сумма"
                     inputMode="decimal"
                     value={currentValue}
                     onChange={(e) => setCurrentValue(e.target.value)}

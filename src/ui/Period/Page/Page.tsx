@@ -10,7 +10,7 @@ import { Table } from './Table';
 import { Header } from '../../Header';
 
 export interface PageProps {
-    parent: Dto,
+    parent?: Dto,
     period: PeriodDto;
     categories: CategoryDto[];
     hideZeroes: boolean;

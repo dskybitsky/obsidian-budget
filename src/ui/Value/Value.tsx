@@ -6,7 +6,8 @@ export interface ValueProps {
 }
 
 export const Value = ({ value }: ValueProps) => {
-    const { currency } = useContext(SettingsContext);
+    const settings = useContext(SettingsContext);
+    const currency = settings?.currency ?? '';
 
     const roundValue = Math.round(value * 100) / 100;
     const normalizedValue = Math.abs(roundValue);

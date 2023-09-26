@@ -1,4 +1,5 @@
 import { getFolder, Reader, Writer } from 'skybitsky-common';
+import dayjs from 'dayjs';
 import {
     Dto,
     AccountDto,
@@ -185,11 +186,20 @@ export class Budget implements BudgetInterface {
     }
 
     createTransactionPage(path: string, transaction: TransactionCreateDto) {
-        const filePath = `${path}/${transaction.date.getTime()}.md`;
+        const fileName = Budget.generateTransactionFileName(transaction);
 
-        const content = `\`\`\`\n${SBS_BUDGET_TRANSACTION}\n\`\`\``;
+        const filePath = `${path}/${fileName}.md`;
+
+        const content = `\`\`\`${SBS_BUDGET_TRANSACTION}\n\`\`\``;
 
         return this.writer.createPage(filePath, transaction, content);
+    }
+
+    protected static generateTransactionFileName(transaction: TransactionCreateDto) {
+        const transactionNameNormalized = transaction.name.replace(/[/\\:]/gi, '_');
+        const dateNormalized = dayjs(transaction.date).format('DDMM_HHmmss');
+
+        return `${dateNormalized}_${transaction.type}_${transactionNameNormalized}`;
     }
 
     protected static getName(page: Record<string, any>): string {

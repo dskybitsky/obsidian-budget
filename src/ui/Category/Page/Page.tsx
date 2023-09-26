@@ -11,7 +11,7 @@ import { Form } from './Form';
 import { Header } from '../../Header';
 
 export interface PageProps {
-    parent: Dto,
+    parent?: Dto,
     category: CategoryDto;
     transactions: TransactionDto[];
     onCreate: (transaction: TransactionCreateDto) => void;

@@ -4,7 +4,7 @@ import { Plate } from './Plate';
 import { Header } from '../../Header';
 
 export interface PageProps {
-    parent: Dto,
+    parent?: Dto,
     transaction: TransactionDto;
 }
 
