@@ -50,6 +50,7 @@ export const Form = ({ type, dir, onCreate }: FormProps) => {
                     value={currentName}
                     onChange={(e) => setCurrentName(e.target.value)}
                 />
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                 <label className={`toggle value-${currentDir}`}>
                     <input
                         type="checkbox"
