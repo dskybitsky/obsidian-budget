@@ -6,10 +6,10 @@
 }
 
 .sbs-budget h1 .separator {
-    margin-inline-start: 0.5ch;
-    margin-inline-end: 0.5ch;
+    margin-inline-start: 0.25rem;
+    margin-inline-end: 0.25rem;
 }
 
 .sbs-budget h1 svg {
-    margin-inline-end: 0.5ch;
+    margin-inline-end: 0.25rem;
 }
