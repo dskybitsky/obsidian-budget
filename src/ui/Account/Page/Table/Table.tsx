@@ -21,6 +21,8 @@ export const Table = ({ value, periods, transactions }: TableProps) => {
 
     let prevPeriodEndValueFact = value;
 
+    const eq = (a: number, b:number, delta: number = 0.01) => Math.abs(a - b) < delta;
+
     return (
         <div className="table account-table">
             <span>
@@ -36,8 +38,9 @@ export const Table = ({ value, periods, transactions }: TableProps) => {
             {periods.map((period, index) => {
                 const periodOverturn = getPeriodOverturn(transactions[index]);
 
+                const periodEndValuePlan = prevPeriodEndValueFact + periodOverturn[0];
                 const periodEndValueFact = prevPeriodEndValueFact + periodOverturn[1];
-                const hasGap = Math.abs(period.value - prevPeriodEndValueFact) > 0.01;
+                const hasGap = !eq(period.value, prevPeriodEndValueFact);
 
                 const row = (
                     <Fragment key={period.name}>
@@ -56,9 +59,21 @@ export const Table = ({ value, periods, transactions }: TableProps) => {
                         <span>
                             <Value value={period.value} />
                         </span>
-                        <span>
-                            <Value value={periodEndValueFact} />
-                        </span>
+                        {eq(periodEndValueFact, periodEndValuePlan)
+                            ? (
+                                <span>
+                                    <Value value={periodEndValueFact} />
+                                </span>
+                            ) : (
+                                <span className="multi">
+                                    <Value key="fact" value={periodEndValueFact} />
+                                    <span>
+                                        (
+                                        <Value key="plan" value={periodEndValuePlan} />
+                                        )
+                                    </span>
+                                </span>
+                            )}
                     </Fragment>
                 );
 

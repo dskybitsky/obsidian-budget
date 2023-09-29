@@ -1,13 +1,19 @@
 .sbs-budget div.account-table {
-    grid-template-columns: 2fr 1fr 1fr;
-}
-
-.sbs-budget div.account-table > span:nth-child(-n + 3) {
-    background-color: var(--table-header-bg-color);
+    grid-template-columns: 6fr 2fr 3fr;
 }
 
 .sbs-budget div.account-table > span:nth-child(6n + 1),
 .sbs-budget div.account-table > span:nth-child(6n + 2),
 .sbs-budget div.account-table > span:nth-child(6n + 3) {
     background-color: var(--table-even-row-bg-color);
+}
+
+.sbs-budget div.account-table > span:nth-child(-n + 3) {
+    background-color: var(--table-header-bg-color);
+}
+
+.sbs-budget div.account-table span.multi {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
 }
