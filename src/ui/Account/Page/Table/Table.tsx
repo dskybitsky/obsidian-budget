@@ -11,12 +11,15 @@ export interface TableProps {
 }
 
 export const Table = ({ value, periods, transactions }: TableProps) => {
-    const getValueEnd = (periodTransactions: TransactionDto[]) => periodTransactions.reduce(
-        (sum, transaction) => sum + (transaction.type === 'fact' ? transaction.value : 0),
-        0,
+    const getPeriodOverturn = (periodTransactions: TransactionDto[]) => periodTransactions.reduce(
+        (sum, transaction) => ([
+            sum[0] + (transaction.type === 'plan' ? transaction.value : 0),
+            sum[1] + (transaction.type === 'fact' ? transaction.value : 0),
+        ]),
+        [0, 0],
     );
 
-    let prevEndValue = value;
+    let prevPeriodEndValueFact = value;
 
     return (
         <div className="table account-table">
@@ -31,15 +34,17 @@ export const Table = ({ value, periods, transactions }: TableProps) => {
             </span>
 
             {periods.map((period, index) => {
-                const valueEnd = getValueEnd(transactions[index]);
-                const hasGap = Math.abs(period.value - prevEndValue) > 0.01;
+                const periodOverturn = getPeriodOverturn(transactions[index]);
+
+                const periodEndValueFact = prevPeriodEndValueFact + periodOverturn[1];
+                const hasGap = Math.abs(period.value - prevPeriodEndValueFact) > 0.01;
 
                 const row = (
                     <Fragment key={period.name}>
                         { hasGap && (
                             <>
                                 <span>-</span>
-                                <span><Value value={prevEndValue} /></span>
+                                <span><Value value={prevPeriodEndValueFact} /></span>
                                 <span><Value value={period.value} /></span>
                             </>
                         )}
@@ -52,12 +57,12 @@ export const Table = ({ value, periods, transactions }: TableProps) => {
                             <Value value={period.value} />
                         </span>
                         <span>
-                            <Value value={valueEnd} />
+                            <Value value={periodEndValueFact} />
                         </span>
                     </Fragment>
                 );
 
-                prevEndValue = valueEnd;
+                prevPeriodEndValueFact = periodEndValueFact;
 
                 return row;
             })}
