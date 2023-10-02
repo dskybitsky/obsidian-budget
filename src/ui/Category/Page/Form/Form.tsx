@@ -43,6 +43,14 @@ export const Form = ({ type, dir, onCreate }: FormProps) => {
                     onChange={(e) => setCurrentValue(e.target.value)}
                 />
                 {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                <input
+                    name="name"
+                    type="text"
+                    placeholder="Название"
+                    value={currentName}
+                    onChange={(e) => setCurrentName(e.target.value)}
+                />
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                 <label className={`toggle value-${currentDir}`}>
                     <input
                         type="checkbox"
@@ -53,13 +61,6 @@ export const Form = ({ type, dir, onCreate }: FormProps) => {
                         { currentDir === 'in' ? '↑' : '↓' }
                     </span>
                 </label>
-                <input
-                    name="name"
-                    type="text"
-                    placeholder="Название"
-                    value={currentName}
-                    onChange={(e) => setCurrentName(e.target.value)}
-                />
                 <input type="submit" value="Добавить" />
             </div>
         </form>

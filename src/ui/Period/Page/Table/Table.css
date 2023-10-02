@@ -7,15 +7,15 @@
     display: none;
 }
 
-.sbs-budget div.period-table > span:nth-child(-n + 4) {
-    background-color: var(--table-header-bg-color);
-}
-
 .sbs-budget div.period-table > span:nth-child(8n + 1),
 .sbs-budget div.period-table > span:nth-child(8n + 2),
 .sbs-budget div.period-table > span:nth-child(8n + 3),
 .sbs-budget div.period-table > span:nth-child(8n + 4) {
     background-color: var(--table-even-row-bg-color);
+}
+
+.sbs-budget div.period-table > span:nth-child(-n + 4) {
+    background-color: var(--table-header-bg-color);
 }
 
 @media (min-width: 840px) {
